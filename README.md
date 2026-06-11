@@ -26,6 +26,7 @@ cd NetCast
 2. Deploy Local Dependencies: 
 
 Install the required foundational Python packages utilizing pip:
+
 pip install -r requirements.txt
 
 💻 Operational Usage
