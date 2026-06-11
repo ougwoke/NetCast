@@ -1,0 +1,604 @@
+#!/usr/bin/env python3
+"""
+NetCast – Unified Email & Domain Phishing Scanner
+NETCAST Edition - Advanced Stage 4 Cyberposture Variant
+"""
+
+#============= MIT LICENSE & DISCLAIMER ==================
+
+#MIT LICENSE
+#============
+
+#Copyright (c) 2026 Ugwoke Oliver Igwenagum
+
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+#LEGAL DISCLAIMER & TERMS OF USE
+#================================
+#NetCast is developed strictly for educational, administrative, defensive security research, and authorized forensic auditing purposes. 
+
+#1. AUTHORIZATION REQUIRED: Users must ensure they have explicit, written authorization from the respective infrastructure owners before performing any audits or threat intelligence processing using this utility. Unsanctioned querying or infrastructure mapping against target networks may violate local and international cybercrime laws.
+
+#2. WARRANTY & LIABILITY: The developer assumes zero liability and is not responsible for any misuse, disruptions, data leaks, service degradation, or collateral damage caused by the application or execution of this software. 
+
+
+import os
+import sys
+import re
+import subprocess
+import html
+import email
+import dns.resolver
+import whois
+from datetime import datetime
+import socket
+from Levenshtein import distance
+import hashlib
+import math
+from collections import Counter
+import requests
+
+REPORT_FILE = "NetCast_report.html"
+
+# ==== ASCII ==============
+NETCAST_ASCII = r"""
+
+█  █ █▀▀▀ ▀▀█▀▀ ▄▀▀▀▄ ▄▀▀▀▄ █▀▀▀█ ▀▀█▀▀
+█▀▄█ █▀▀▀   █   █     █▀▀▀█ ▀▀▀▀▄   █
+█  █ █▄▄▄   █   ▀▄▄▄▀ █   █ █▄▄▄█   █
+
+"""
+# ====== TERMINAL ==========
+RESET = "\033[0m"
+RED = "\033[38;5;196m"
+
+def clear():
+    os.system("clear" if os.name == "posix" else "cls")
+
+def print_banner():
+    clear()
+    print(f"{RED}{NETCAST_ASCII}{RESET}")
+    print(
+        f"{RED}"
+        "    ,_,   \n"
+        "   (O,O)  \n"
+        "   (   )  \n"
+        "    \" \"   \n"
+        f"{RESET}"
+    )
+
+# ==== TRUSTED DOMAINS ==========
+TRUSTED_BRANDS = [
+    "google.com", "youtube.com", "gmail.com", "yahoo.com", "microsoft.com",
+    "live.com", "outlook.com", "apple.com", "icloud.com", "amazon.com",
+    "aws.amazon.com", "facebook.com", "instagram.com", "whatsapp.com",
+    "meta.com", "netflix.com", "x.com", "tiktok.com", "cloudflare.com",
+    "github.com", "gitlab.com", "bitbucket.org", "digitalocean.com",
+    "heroku.com", "vercel.com", "netlify.com", "paypal.com", "stripe.com",
+    "wise.com", "revolut.com", "squareup.com", "cash.app", "venmo.com",
+    "chase.com", "bankofamerica.com", "wellsfargo.com", "citibank.com",
+    "zoom.us", "skype.com", "slack.com", "discord.com", "telegram.org",
+    "kaspersky.com", "mcafee.com", "norton.com", "bitdefender.com", "sophos.com",
+    "ebay.com", "aliexpress.com", "shopify.com", "walmart.com", "target.com",
+    "usa.gov", "gov.uk", "europa.eu", "canada.ca", "india.gov.in",
+    "harvard.edu", "mit.edu", "stanford.edu", "ox.ac.uk", "cam.ac.uk",
+    "linkedin.com", "dropbox.com", "adobe.com", "zoominfo.com", "atlassian.com",
+    "snapchat.com", "reddit.com", "pinterest.com", "quora.com", "wordpress.com",
+    "tumblr.com", "twitch.tv", "roblox.com", "oracle.com", "sap.com",
+    "ibm.com", "dell.com", "hp.com", "lenovo.com", "vmware.com",
+    "salesforce.com", "workday.com", "servicenow.com", "proton.me",
+    "protonmail.com", "aol.com", "zoho.com", "yandex.com", "mail.com",
+    "coinbase.com", "binance.com", "kraken.com", "okx.com", "bybit.com",
+    "blockchain.com", "paypal.me", "dhl.com", "fedex.com", "ups.com",
+    "usps.com", "maersk.com", "irs.gov", "ssa.gov", "gov.au", "gov.ca",
+    "nigeria.gov.ng", "cbn.gov.ng", "auth0.com", "okta.com", "duo.com",
+    "lastpass.com", "1password.com"
+]
+
+# ==== EMAIL PHISHING KEYWORDS ========
+URGENT_WORDS = ["urgent", "immediately", "action required", "act now", "limited time", "final notice", "important notice", "response needed", "attention required", "your account will be closed", "account suspended", "account restricted", "service interruption", "security alert", "unauthorized access", "unusual activity", "deadline", "verify", "suspended", "time limited", "last warning", "failure to respond"]
+CREDENTIAL_PHRASES = ["verify your account", "confirm your password", "reset your password", "login to continue", "sign in to continue", "re-enter your credentials", "validate your identity", "verify your identity", "update your login details", "confirm your account information", "security verification", "account verification required", "authenticate your account", "confirm your email address"]
+PAYMENT_PHRASES = ["update payment information", "update your payment information", "billing issue", "payment failed", "payment declined", "invoice attached", "outstanding balance", "refund available", "claim your refund", "tax refund", "bank verification", "verify payment method", "credit card expired", "payment confirmation required", "subscription renewal"]
+REWARD_PHRASES = ["you have won", "congratulations", "claim your prize", "claim your reward", "winner selected", "gift card", "free voucher", "cash reward", "exclusive offer", "special promotion", "bonus waiting", "reward pending"]
+DELIVERY_PHRASES = ["package delayed", "delivery failed", "shipment on hold", "tracking update", "confirm delivery address", "parcel awaiting collection", "courier notification", "customs clearance", "shipping confirmation", "delivery exception"]
+ATTACHMENT_PHRASES = ["see attached", "attached invoice", "attached document", "attached payment", "open attachment", "review attachment", "download document", "download invoice", "secure document", "shared file", "view document", "view payment receipt"]
+BEC_PHRASES = ["wire transfer", "bank transfer", "payment request", "urgent payment", "change of bank details", "new bank account", "vendor payment", "purchase order", "confidential transaction", "kindly process", "approve payment", "executive request"]
+CRYPTO_PHRASES = ["crypto investment", "bitcoin payout", "wallet verification", "airdrop", "token claim", "seed phrase", "connect wallet", "staking reward", "crypto reward", "withdraw funds"]
+
+DANGEROUS_ATTACHMENTS = [".exe", ".scr", ".js", ".vbs", ".iso", ".docm", ".xlsm", ".zip", ".rar", ".7z"]
+ATTACHMENT_RISK = {".exe": 40, ".scr": 40, ".js": 35, ".vbs": 35, ".iso": 30, ".docm": 30, ".xlsm": 30, ".zip": 20, ".rar": 20, ".7z": 20}
+SUSPICIOUS_TLDS = (".xyz", ".top", ".club", ".info", ".click", ".live", ".buzz")
+
+def extract_urls(text):
+    return re.findall(r'https?://[^\s<>"\'`]+', text)
+
+def check_phishing_phrases(text, phrase_list, score_value, findings, score):
+    text_lower = text.lower()
+    for phrase in phrase_list:
+        if phrase.lower() in text_lower:
+            score += score_value
+            findings.append(f"Phishing indicator detected: {phrase}")
+    return score
+
+def check_attachment(filename):
+    if not filename:
+        return None
+    filename = filename.lower()
+    for ext in DANGEROUS_ATTACHMENTS:
+        if filename.endswith(ext):
+            return ext
+    return None
+
+def parse_eml_file(file_path):
+    with open(file_path, "rb") as f:
+        msg = email.message_from_binary_file(f)
+    return msg
+
+def detect_typosquat(domain):
+    domain = domain.lower()
+
+    if domain in TRUSTED_BRANDS:
+        return None
+
+    for brand in TRUSTED_BRANDS:
+        if distance(domain, brand) <= 2:
+            if domain != brand:
+                return brand
+    return None
+
+# =====================================================================
+# ARCHITECTURAL SCORING ENGINE
+# =====================================================================
+
+def domain_dns_info(domain):
+    records_found, a_records, mx_records, ns_records = [], [], [], []
+    for record_type in ["A", "AAAA", "MX", "NS"]:
+        try:
+            answers = dns.resolver.resolve(domain, record_type)
+            if answers:
+                records_found.append(record_type)
+                if record_type == "A":
+                    for rdata in answers: a_records.append(rdata.to_text())
+                elif record_type == "MX":
+                    for rdata in answers: mx_records.append(str(rdata.exchange).rstrip("."))
+                elif record_type == "NS":
+                    for rdata in answers: ns_records.append(str(rdata.target).rstrip("."))
+        except Exception: pass
+    return len(records_found) > 0, records_found, a_records, mx_records, ns_records
+
+def get_spf_record(domain):
+    try:
+        answers = dns.resolver.resolve(domain, "TXT")
+        for record in answers:
+            txt = record.to_text()
+            if "v=spf1" in txt.lower(): return txt
+        return None
+    except Exception: return None
+
+def get_dmarc_record(domain):
+    try:
+        answers = dns.resolver.resolve(f"_dmarc.{domain}", "TXT")
+        for record in answers:
+            txt = record.to_text()
+            if "v=dmarc1" in txt.lower(): return txt
+        return None
+    except Exception: return None
+
+def domain_whois_info(domain):
+    try:
+        w = whois.whois(domain)
+        return {"registrar": w.registrar, "creation_date": w.creation_date, "expiration_date": w.expiration_date, "country": w.country}
+    except Exception: return None
+
+def load_client_whitelist():
+    whitelist_file = "whitelist.txt"
+    whitelisted_domains = set()
+
+    if not os.path.exists(whitelist_file):
+        try:
+            with open(whitelist_file, "w") as f:
+                f.write("# Enter one trusted domain per line (e.g., companypartner.com)\n")
+        except Exception:
+            pass
+        return whitelisted_domains
+
+    try:
+        with open(whitelist_file, "r") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#"):
+                    whitelisted_domains.add(line.lower())
+    except Exception as e:
+        print(f"[-] Error loading whitelist.txt: {e}")
+
+    return whitelisted_domains
+
+# ------------LIVE SPF CHECK LOGIC ------------------------
+def verify_spf_locally(domain, sender_ip):
+    """
+    Checks if a sender_ip is authorized by the domain's SPF record.
+    """
+    if not sender_ip:
+        return "NONE", "No sender IP available for validation."
+
+    try:
+        answers = dns.resolver.resolve(domain, "TXT")
+        spf_record = None
+        for record in answers:
+            txt = record.to_text().strip('"')
+            if "v=spf1" in txt.lower():
+                spf_record = txt
+                break
+
+        if not spf_record:
+            return "NONE", "No SPF record found on domain."
+
+        if sender_ip in spf_record:
+            return "PASS", f"Sender IP {sender_ip} matched SPF record parameters."
+
+        if "-all" in spf_record or "~all" in spf_record:
+            if sender_ip not in spf_record:
+                return "FAIL", "Sender IP is not authorized in domain SPF declaration."
+
+        return "NEUTRAL", "SPF record found, but IP alignment is ambiguous."
+
+    except Exception as e:
+        return "ERROR", f"DNS lookup failed during SPF validation: {str(e)}"
+
+# -------------------ANALYSE_TARGET ------------------------
+def analyse_target(target, target_type):
+    score = 0
+    findings = []
+    text = target.lower()
+
+    verdict = "LEGITIMATE"
+
+    client_whitelist = load_client_whitelist()
+
+    domain_to_check = None
+
+    if target_type == "domain":
+        domain_to_check = target.lower().strip()
+    elif target_type == "email_file":
+        pass
+
+    if domain_to_check and (domain_to_check in client_whitelist):
+        findings.append(f"➔ [WHITELIST] Domain '{domain_to_check}' matched client-defined whitelist.txt.")
+        findings.append("➔ Threat analysis bypassed. Destination marked completely safe.")
+        return 0, "LEGITIMATE", findings
+
+    # ------------------ DOMAIN SCANNING MODE ------------------
+    if target_type == "domain":
+        raw_target = target.lower()
+        domain = raw_target.replace("https://", "").replace("http://", "").split("/")[0].split("?")[0].replace("www.", "")
+
+        exists, records, a_records, mx_records, ns_records = domain_dns_info(domain)
+        if not exists:
+            return (100, "NON-EXISTENT DOMAIN", ["DNS validation failed. No core architectural records found.", "Domain does not appear to exist."])
+
+        findings.append(f"DNS record types found: {', '.join(records)}")
+        if a_records: findings.append(f"A records resolved successfully: {', '.join(a_records)}")
+        if mx_records: findings.append(f"MX records found: {', '.join(mx_records)}")
+        if ns_records: findings.append(f"NS records found: {', '.join(ns_records)}")
+
+        spf_record = get_spf_record(domain)
+        if spf_record: findings.append(f"SPF Record Found: {spf_record}")
+        else:
+            findings.append("SPF Record Not Found"); score += 10
+
+        dmarc = get_dmarc_record(domain)
+        if dmarc: findings.append(f"DMARC Policy Found: {dmarc}")
+        else: findings.append("DMARC Policy Not Found")
+
+        whois_data = domain_whois_info(domain)
+        if whois_data:
+            findings.append(f"Registrar: {whois_data.get('registrar') or 'Unknown'}")
+            findings.append(f"Country of Registration: {whois_data.get('country') or 'Unknown'}")
+
+            creation = whois_data.get('creation_date')
+            expiration = whois_data.get('expiration_date')
+
+            if isinstance(creation, list): creation = creation[0]
+            if isinstance(expiration, list): expiration = expiration[0]
+
+            findings.append(f"Domain Registration Date: {creation.strftime('%Y-%m-%d %H:%M:%S') if hasattr(creation, 'strftime') else str(creation)}")
+            findings.append(f"Domain Expiry Date: {expiration.strftime('%Y-%m-%d %H:%M:%S') if hasattr(expiration, 'strftime') else str(expiration)}")
+
+            try:
+                if creation:
+                    age_days = (datetime.now() - creation).days
+                    if age_days < 30:
+                        score += 35; findings.append("Very new domain (<30 days) - high risk infrastructure posture.")
+                    elif age_days < 180:
+                        score += 15; findings.append("Relatively new domain (<6 months).")
+            except Exception: pass
+
+        typo = detect_typosquat(domain)
+        if typo:
+            score = max(score, 80)
+            findings.append(f"Possible typosquatting detected. Immitates trusted asset footprint brand profile: {typo}")
+
+        if any(x in raw_target for x in ["/login", "/verify", "/update", "/account"]):
+            score += 15; findings.append("High-risk landing keywords parsed inside path parameters.")
+        if domain.endswith(SUSPICIOUS_TLDS):
+            score += 20; findings.append("Suspicious registrar configuration TLD extension verified.")
+
+    # ------------------ EMAIL TEXT SCANNING MODE ------------------
+    elif target_type == "email_text":
+        findings.append("Email text analysis mode active (no headers available).")
+        urls = extract_urls(target)
+        if urls:
+            findings.append(f"{len(urls)} URL(s) detected.")
+            for url in urls:
+                findings.append(f"URL Found: {url}")
+                url_domain = url.replace("https://", "").replace("http://", "").split("/")[0].lower()
+                findings.append(f"Extracted URL Domain: {url_domain}") # Added for structural visibility
+
+                if url_domain.endswith(SUSPICIOUS_TLDS):
+                    score += 20; findings.append(f"Suspicious TLD detected on embedded text URL: {url_domain}")
+
+        score = check_phishing_phrases(text, URGENT_WORDS, 15, findings, score)
+        score = check_phishing_phrases(text, DELIVERY_PHRASES, 10, findings, score)
+        score = check_phishing_phrases(text, REWARD_PHRASES, 15, findings, score)
+        score = check_phishing_phrases(text, ATTACHMENT_PHRASES, 12, findings, score)
+        score = check_phishing_phrases(text, PAYMENT_PHRASES, 15, findings, score)
+        score = check_phishing_phrases(text, CREDENTIAL_PHRASES, 20, findings, score)
+        score = check_phishing_phrases(text, BEC_PHRASES, 20, findings, score)
+
+        detected_categories = 0
+        if any(x in text for x in URGENT_WORDS): detected_categories += 1
+        if any(x in text for x in CREDENTIAL_PHRASES): detected_categories += 1
+        if any(x in text for x in PAYMENT_PHRASES): detected_categories += 1
+        if any(x in text for x in ATTACHMENT_PHRASES): detected_categories += 1
+        if any(x in text for x in BEC_PHRASES): detected_categories += 1
+        if detected_categories >= 2:
+            score += 25; findings.append("Context Escalation: Multiple concurrent phishing indicators flags triggered.")
+
+    # ------------------ EML FILE SCANNING MODE ------------------
+    elif target_type == "email_file":
+        critical_indicators = 0
+        msg = parse_eml_file(target)
+
+        sender = msg.get("From", "")
+        reply_to = msg.get("Reply-To", "")
+        auth = msg.get("Authentication-Results", "")
+        display_name = sender.lower()
+
+        findings.append(f"Sender: {sender}")
+        if reply_to: findings.append(f"Reply-To: {reply_to}")
+
+        try:
+            sender_domain = sender.split("@")[-1].strip("> ").lower()
+        except Exception:
+            sender_domain = ""
+
+        sender_ip = ""
+        received_headers = msg.get_all("Received")
+        if received_headers:
+
+            for hop in received_headers:
+                ip_match = re.search(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b', hop)
+                if ip_match:
+                    extracted_ip = ip_match.group(0)
+
+                    if not extracted_ip.startswith(("127.", "0.")):
+                        sender_ip = extracted_ip
+                        break
+# =============================================================
+#         LIVE DMARC & SPF LOCAL VALIDATION ENGINE
+# =================================================================
+        if sender_domain:
+            dmarc_record = get_dmarc_record(sender_domain)
+
+            if dmarc_record:
+                findings.append(f"➔ DMARC Record Found: {dmarc_record}")
+
+                spf_status, spf_reason = verify_spf_locally(sender_domain, sender_ip)
+                findings.append(f"➔ SPF Validation Status: {spf_status} ({spf_reason})")
+
+                if spf_status == "PASS":
+                    score += 0
+                    findings.append("➔ DMARC Alignment: PASS (Sender domain matches authorized SPF architecture).")
+                elif spf_status == "FAIL":
+                    if "p=reject" in dmarc_record.lower():
+                        score += 40; critical_indicators += 1
+                        findings.append("➔ ALERT: DMARC Alignment FAIL on a strict 'p=reject' policy domain!")
+                    else:
+                        score += 20; critical_indicators += 1
+                        findings.append("➔ WARNING: DMARC Alignment FAIL. Mail infrastructure mismatch detected.")
+            else:
+                score += 15
+                findings.append("➔ WARNING: Missing DMARC protection record. Vulnerable to domain spoofing loop.")
+
+        body = ""
+        if msg.is_multipart():
+            for part in msg.walk():
+                if part.get_content_type() == "text/plain":
+                    try: body += part.get_payload(decode=True).decode(errors="ignore")
+                    except Exception: pass
+        else:
+            try: body = msg.get_payload(decode=True).decode(errors="ignore")
+            except Exception: pass
+
+        if body:
+            body_lower = body.lower()
+            score = check_phishing_phrases(body_lower, URGENT_WORDS, 15, findings, score)
+            score = check_phishing_phrases(body_lower, DELIVERY_PHRASES, 10, findings, score)
+            score = check_phishing_phrases(body_lower, REWARD_PHRASES, 15, findings, score)
+            score = check_phishing_phrases(body_lower, ATTACHMENT_PHRASES, 12, findings, score)
+            score = check_phishing_phrases(body_lower, PAYMENT_PHRASES, 15, findings, score)
+            score = check_phishing_phrases(body_lower, CREDENTIAL_PHRASES, 20, findings, score)
+            score = check_phishing_phrases(body_lower, BEC_PHRASES, 20, findings, score)
+
+        for part in msg.walk():
+            current_filename = part.get_filename()
+            if current_filename:
+                findings.append(f"Attachment file parsed: {current_filename}")
+
+                ext = check_attachment(current_filename)
+                if ext:
+                    risk_penalty = ATTACHMENT_RISK.get(ext, 0)
+                    if risk_penalty > 25:
+                        score += risk_penalty; critical_indicators += 1
+                        findings.append(f"ALERT: High-risk extension baseline validation alarm triggered: {ext}")
+                    else:
+                        findings.append(f"-> Attachment extension profile validation matches safe business document template.")
+
+        urls = extract_urls(body)
+        if urls:
+            findings.append(f"{len(urls)} URL(s) detected inside email file.")
+            for url in urls:
+                findings.append(f"URL Found: {url}")
+                url_domain = url.replace("https://", "").replace("http://", "").split("/")[0].lower()
+                findings.append(f"Extracted URL Domain: {url_domain}")
+
+                typo = detect_typosquat(url_domain)
+                if typo: score += 35; findings.append(f"Typosquatting detected on internal link: similar to {typo}")
+                if url_domain.endswith(SUSPICIOUS_TLDS):
+                    score += 20; findings.append(f"Suspicious TLD vector path verified: {url_domain}")
+
+        try:
+            sender_domain = sender.split("@")[-1].strip("> ").lower()
+            if reply_to:
+                reply_domain = reply_to.split("@")[-1].strip("> ").lower()
+                if sender_domain != reply_domain:
+                    score += 20; critical_indicators += 1; findings.append("Spoofing Indicator: Reply-To destination domain differs from Sender infrastructure.")
+        except Exception: sender_domain = None
+
+        if sender_domain in client_whitelist:
+            findings.append(f"➔ [WHITELIST] Sender domain '{sender_domain}' found in whitelist.txt.")
+            findings.append("➔ Threat evaluation bypassed by client administrative policy.")
+            return 0, "LEGITIMATE", findings
+
+        if sender_domain:
+            typo_sender = detect_typosquat(sender_domain)
+            if typo_sender:
+                score +=35; critical_indicators += 1
+                findings.append(f"Brand Protection Alert: Sender domain resembles trusted domain: {typo_sender}")
+
+        BRAND_IMPERSONATION = {"paypal": "paypal.com", "google": "google.com", "microsoft": "microsoft.com", "amazon": "amazon.com", "apple": "apple.com", "facebook": "facebook.com", "netflix": "netflix.com"}
+        if sender_domain:
+            for brand, legit_domain in BRAND_IMPERSONATION.items():
+                if brand in display_name and legit_domain not in sender_domain:
+                    score += 25; findings.append(f"Display Name Impersonation: Found brand moniker '{brand.title()}' using untrusted source domain.")
+
+        if critical_indicators >= 3:
+            score += 15; findings.append("Aggregated Escalation: Multiple core cryptographic or architectural threat flags identified concurrently.")
+
+    # ================= RISK METRIC CLASSIFICATION =================
+    score = min(score, 100)
+    if score >= 75: findings.append("Risk Severity: Critical")
+    elif score >= 50: findings.append("Risk Severity: High")
+    elif score >= 26: findings.append("Risk Severity: Medium")
+    else: findings.append("Risk Severity: Low")
+
+    if score >= 70: verdict = "MALICIOUS"
+    elif score >= 45: verdict = "SUSPICIOUS"
+    elif score >= 25: verdict = "NEEDS REVIEW"
+    else: verdict = "LEGITIMATE"
+
+    return score, verdict, findings
+
+# ================= AUTOMATED RESPONSE PLAYBOOKS =================
+def get_recommendations(verdict, target_type):
+    if target_type == "domain":
+        domain_recs = {
+            "MALICIOUS": [
+                "CRITICAL: Add this domain to the corporate proxy/firewall perimeter blacklists immediately.",
+                "Sinkhole internal DNS requests matching this domain to identify if any internal assets are beaconing to it.",
+                "Submit a takedown request to the domain's registrar or hosting provider.",
+                "Review SIEM/Web Gateway logs to identify any employee endpoints that successfully connected to this host."
+            ],
+            "SUSPICIOUS": [
+                "Implement proactive web gateway monitoring for inbound/outbound traffic to this host.",
+                "Cross-reference this domain infrastructure on external threat intelligence platforms like VirusTotal and Cisco Talos.",
+                "Monitor internal DNS query logs for sudden spikes in requests targeting this domain resource."
+            ],
+            "NEEDS REVIEW": [
+                "Evaluate the domain configuration defects (e.g., missing structural SPF/DMARC settings).",
+                "Verify domain age updates; closely monitor if the asset was registered within the past 30-180 days.",
+                "No immediate block required, but restrict high-privilege access routing to this external asset."
+            ],
+            "LEGITIMATE": [
+                "Asset verified clean. Allow normal business infrastructure access routing.",
+                "Consider adding to internal organizational safe-lists if it is a trusted partner experiencing false positives."
+            ]
+        }
+        return domain_recs.get(verdict, ["Review the specific structural anomalies in the domain report."])
+    else:
+        email_recs = {
+            "MALICIOUS": [
+                "IMMEDIATE ACTION REQUIRED: Block sender domain/IP at the email gateway and firewall perimeter.",
+                "Purge this message globally from all user mailboxes to mitigate downstream exposure.",
+                "Force an immediate password reset and revoke active sessions for any user who interacted with embedded content.",
+                "Analyze endpoint logs (EDR) for unusual child processes spawned by email clients or browsers."
+            ],
+            "SUSPICIOUS": [
+                "Quarantine the email message immediately and restrict access to security personnel.",
+                "Detonate attachments or links in an isolated sandbox environment to observe behavioral execution.",
+                "Verify the 'Received' routing headers manually to confirm delivery path alignment."
+            ],
+            "NEEDS REVIEW": [
+                "Check for technical delivery gaps (missing SPF/DMARC records) or highly volatile domain age.",
+                "Confirm authenticity with the purported sender using an alternative, verified communication channel.",
+                "Apply an external warning banner to the message body if it must be released to the recipient."
+            ],
+            "LEGITIMATE": [
+                "Proceed with standard mailbox delivery.",
+                "Monitor for future delivery anomalies, or adjust baseline rules if this source requires whitelisting."
+            ]
+        }
+        return email_recs.get(verdict, ["Review the specific indicator anomalies listed in the findings report."])
+
+# ================= RUN =================
+def run(target, target_type):
+    score, verdict, findings = analyse_target(target, target_type)
+    print(f"\nScan Verdict: {verdict} (Score: {score}/100)")
+    for finding in findings:
+        print(f" - {finding}")
+
+# ================= MENU =================
+def interactive_menu():
+    print_banner()
+    print("1. Scan Domain")
+    print("2. Scan Email Texts (Multi-line Input Supported)")
+    print("3. Scan Email File (.eml)")
+    print("4. Exit")
+
+    choice = input("\nSelect option (1-4): ").strip()
+
+    if choice == "1":
+        run(input("Enter domain: ").strip(), "domain")
+    elif choice == "2":
+        print("\nEnter or paste your raw email text below. To submit for scanning, type 'DONE' on a new line and press Enter:\n" + "-"*60)
+        lines = []
+        while True:
+            line = input()
+            if line.strip().upper() == "DONE": break
+            lines.append(line)
+        email_content = "\n".join(lines).strip()
+        if email_content: run(email_content, "email_text")
+        else:
+            print("Empty input. Returning to menu..."); interactive_menu()
+    elif choice == "3":
+        run(input("Enter path to .eml file: ").strip(), "email_file")
+    elif choice == "4":
+        sys.exit(0)
+    else:
+        interactive_menu()
+
+if __name__ == "__main__":
+    interactive_menu()
