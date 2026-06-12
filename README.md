@@ -7,9 +7,13 @@ NetCast is a lightweight, high-performance command-line interface (CLI) mail for
 🚀 **Key Features**
 
 • Advanced DNS Auditing: Resolves and displays structural namespace mapping including A, AAAA, and NS records.
+
 • Email Security Posture Validation: Parses live text data or direct file inputs to analyze infrastructural alignment against SPF and DMARC policies.
+
 • Passive Open-Source Intelligence (OSINT): Queries domain age vectors, registration lifecycles, and registrar origins via raw WHOIS data scraping.
+
 • Console-Native Risk Scoring: Computes instant threat visibility calculations dynamically formatted directly to the terminal screen.
+
     
 📋 **System Prerequisites**
 
@@ -42,14 +46,14 @@ python3 netcast_core
 
 3. **Sample Terminal Execution Output**
    
-1. Scan Domain
-2. Scan Email Texts (Multi-line Input Supported)
-3. Scan Email File (.eml)
-4. Exit
-Select option (1-4): 1
-Enter domain: targetdomain.com
+   Scan Domain
+   Scan Email Texts (Multi-line Input Supported)
+   Scan Email File (.eml)
+   Exit
+   Select option (1-4): 1
+   Enter domain: targetdomain.com
 
-Scan Verdict: LEGITIMATE (Score: 0/100)
+   Scan Verdict: LEGITIMATE (Score: 0/100)
  - DNS record types found: A, AAAA, NS
  - A records resolved successfully: 142.250.181.142
  - NS records found: ns1.targetdomain.com, ns2.targetdomain.com
