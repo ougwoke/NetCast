@@ -23,7 +23,7 @@ NetCast is engineered to operate cross-platform across modern Linux distribution
 
     1. Clone the Source Repository:
        git clone https://github.com/ougwoke/NetCast.git
-       cd NetCast
+       cd ~/NetCast
        
        How to do it:
        
