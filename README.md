@@ -67,10 +67,15 @@ Execute the primary forensic file directly from your terminal session:
 3. **Sample Terminal Execution Output**
    
    Scan Domain
+   
    Scan Email Texts (Multi-line Input Supported)
+   
    Scan Email File (.eml)
+   
    Exit
+   
    Select option (1-4): 1
+   
    Enter domain: targetdomain.com
 
    Scan Verdict: LEGITIMATE (Score: 0/100)
@@ -82,6 +87,7 @@ Execute the primary forensic file directly from your terminal session:
  - Registrar: MarkMonitor, Inc.
  - Country of Registration: US
  - Risk Severity: Low
+
 
 
 
