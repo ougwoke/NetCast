@@ -75,7 +75,9 @@ Execute the primary forensic file directly from your terminal session:
      * Enter domain: targetdomain.com
 
        Scan Verdict: LEGITIMATE (Score: 0/100)
+       
        DNS record types found: A, AAAA, NS
+       
        A records resolved successfully: 142.250.181.142
        
        NS records found: ns1.targetdomain.com, ns2.targetdomain.com
