@@ -50,10 +50,10 @@ Alternatively create a virtual environmentand run:
        * pip install -r requirements.txt
        * python3 netcast_core
   
-   If you are passing an email file path use:
+   If you are passing an email file path (exp. Downloads), use:
 
-       * python3 netcast_core suspicious_email.eml (On linux & macOS)
-       * python netcast_core C:\path\to\suspicious_email.eml
+       * python3 netcast_core ~/Downloads/suspicious_email.eml (On linux & macOS)
+       * python netcast_core C:\Users\Username\Downloads\suspecious_email.eml (On Windows)
 
 
 💻 **Operational Usage**
@@ -153,13 +153,15 @@ To generate your weekly/monthly/yearly reports:
 ![System Interface](images/image10.png)
 
 
+
+
 MIT LICENSE + LEGAL DISCLAIMER & TERMS OF USE
 =============================================
 
 
-MIT LICENSE 
-============
 
+**MIT LICENCE**
+================
 Copyright (c) 2026 Ugwoke Oliver Igwenagum
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
