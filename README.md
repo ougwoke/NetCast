@@ -43,7 +43,12 @@ Note: for Kali Linux / Ubuntu Users:
 If you encounter an externally-managed-environment error, you can safely bypass it by forcing the installation to your user profile:
 
        * pip install -r requirements.txt --break-system-packages
-   
+
+Alternatively create a virtual environmentand run:
+
+       * python3 -m venv venv && source venv/bin/activate
+       * pip install -r requirements.txt
+       * python3 netcast
   
    If you are passing an email file path use:
 
