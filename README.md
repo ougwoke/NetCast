@@ -17,7 +17,7 @@ NetCast is a lightweight, high-performance command-line interface (CLI) mail for
     
 📋 **System Prerequisites**
 
-NetCast is engineered to operate cross-platform across modern Linux distributions (tested on Kali Linux), and Windows environments running Python 3.8+.
+NetCast is engineered to operate cross-platform across modern Linux distributions (tested on Kali Linux), and Windows environments running Python 3.12.3.
 
 🔧 **Installation & Configuration**
 
@@ -28,7 +28,7 @@ NetCast is engineered to operate cross-platform across modern Linux distribution
        
        How to do it:
        
-       * Open your terminal (like the Kali Linux terminal you are using).
+       * Open your terminal
        * Copy the URL link of NetCast
        * Type git clone followed by that link and press Enter.
 
@@ -58,7 +58,7 @@ Alternatively create a virtual environmentand run:
 
 💻 **Operational Usage**
 
-Execute the primary forensic file directly from your terminal session:
+Execute the core script directly from your terminal session:
 
        * python3 netcast_core (linux & macOS)
        * python netcast_core (Windows) 
@@ -102,7 +102,7 @@ Execute the primary forensic file directly from your terminal session:
 3. EXECUTIVE HTML POSTURE DASHBOARD GENERATOR: Includes an independent compilation engine that crawls your log database to render production-ready, beautiful HTML dashboards reflecting your daily, weekly, monthly, and yearly enterprise risk trends.
 
 📦 **WHAT IS INCLUDED IN YOUR COMMERCIAL PACK:**
-* netcast_tool (Fully Compiled, Self-Contained High-Performance Executable)
+* netcast (Fully Compiled, Self-Contained High-Performance Executable)
 * dashboard_generator (Plain-Text Adaptable HTML Reporting Engine Script)
 * .env (Global Context Token Environment Template)
 * SETUP_GUIDE.txt (Granular, Step-by-Step Security Deployment Manual)
@@ -110,7 +110,7 @@ Execute the primary forensic file directly from your terminal session:
 Stop copy-pasting terminal readouts into Notepad. Deploy NetCast Premium, generate professional corporate dashboard reports, and maximize your client delivery standards today!
 
 
-📊**PRACTICAL DEMO & EXECUTIVE REPORTING**
+📊**PRACTICAL DEMO & EXECUTIVE REPORTING (PREMIUM)**
 
 1. MODULE PREVIEW: DOMAIN AUDIT (CLI & REPORT ALIGNMENT) 
 Run the Tool (NetCast)
