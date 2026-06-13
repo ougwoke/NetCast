@@ -48,7 +48,7 @@ Alternatively create a virtual environmentand run:
 
        * python3 -m venv venv && source venv/bin/activate
        * pip install -r requirements.txt
-       * python3 netcast
+       * python3 netcast_core
   
    If you are passing an email file path use:
 
