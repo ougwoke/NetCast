@@ -1,4 +1,0 @@
-dnspython
-python-whois
-requests
-python-dotenv
