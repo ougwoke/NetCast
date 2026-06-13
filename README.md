@@ -66,23 +66,23 @@ Execute the primary forensic file directly from your terminal session:
 
 3. **Sample Terminal Execution Output**
    
-     - Scan Domain
-     - Scan Email Texts (Multi-line Input Supported)
-     - Scan Email File (.eml)
-     - Exit
+     * Scan Domain
+     * Scan Email Texts (Multi-line Input Supported)
+     * Scan Email File (.eml)
+     * Exit
    
-     - Select option (1-4): 1
-     - Enter domain: targetdomain.com
+     * Select option (1-4): 1
+     * Enter domain: targetdomain.com
 
-     - Scan Verdict: LEGITIMATE (Score: 0/100)
-     - DNS record types found: A, AAAA, NS
-     - A records resolved successfully: 142.250.181.142
-     - NS records found: ns1.targetdomain.com, ns2.targetdomain.com
-     - SPF Record Found: "v=spf1 include:_spf.targetdomain.com ~all"
-     - DMARC Policy Found: "v=DMARC1; p=reject;"
-     - Registrar: MarkMonitor, Inc.
-     - Country of Registration: US
-     - Risk Severity: Low
+     * Scan Verdict: LEGITIMATE (Score: 0/100)
+     * DNS record types found: A, AAAA, NS
+     * A records resolved successfully: 142.250.181.142
+     * NS records found: ns1.targetdomain.com, ns2.targetdomain.com
+     * SPF Record Found: "v=spf1 include:_spf.targetdomain.com ~all"
+     * DMARC Policy Found: "v=DMARC1; p=reject;"
+     * Registrar: MarkMonitor, Inc.
+     * Country of Registration: US
+     * Risk Severity: Low
 
 
 
