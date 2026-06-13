@@ -22,8 +22,9 @@ NetCast is engineered to operate cross-platform across modern Linux distribution
 🔧 **Installation & Configuration**
 
     1. Clone the Source Repository:
-       git clone https://github.com/ougwoke/NetCast.git
-       cd ~/NetCast
+       ```bash
+          git clone [https://github.com/ougwoke/NetCast.git](https://github.com/ougwoke/NetCast.git)
+          cd NetCast
        
        How to do it:
        
@@ -35,13 +36,27 @@ NetCast is engineered to operate cross-platform across modern Linux distribution
 
 Install the required foundational Python packages utilizing pip:
 
-* pip install -r requirements.txt
+       * pip install -r requirements.txt (On Linux & Windows)
+       * pip3 install -r requirements.txt (On macOS)  
+
+Note: for Kali Linux / Ubuntu Users:
+If you encounter an externally-managed-environment error, you can safely bypass it by forcing the installation to your user profile:
+
+       * pip install -r requirements.txt --break-system-packages
+   
+  
+   If you are passing an email file path use:
+
+       * python3 netcast_core suspicious_email.eml (On linux & macOS)
+       * python netcast_core C:\path\to\suspicious_email.eml
 
 
 💻 **Operational Usage**
 
 Execute the primary forensic file directly from your terminal session:
-python3 netcast_core
+
+       * python3 netcast_core (linux & macOS)
+       * python netcast_core (Windows) 
 
 
 3. **Sample Terminal Execution Output**
@@ -65,8 +80,8 @@ python3 netcast_core
 
 
 
-🌟 PREMIUM VERSION (WHAT MAKES PREMIUM ELITE):
-==============================================
+🌟 **PREMIUM VERSION (WHAT MAKS PREMIUM ELITE):**
+
 1. GLOBAL THREAT INTELLIGENCE INTEGRATION: Features a dynamic, isolated API module mapping directly against global reputation aggregates (VirusTotal) for zero-day URL and malicious infrastructure cross-referencing.
 2. AUTOMATED JSON TELEMETRY ARCHIVING: Every scan automatically commits structured JSON log payloads down to local disk space for enterprise compliance logging.
 3. EXECUTIVE HTML POSTURE DASHBOARD GENERATOR: Includes an independent compilation engine that crawls your log database to render production-ready, beautiful HTML dashboards reflecting your daily, weekly, monthly, and yearly enterprise risk trends.
@@ -79,8 +94,9 @@ python3 netcast_core
 
 Stop copy-pasting terminal readouts into Notepad. Deploy NetCast Premium, generate professional corporate dashboard reports, and maximize your client delivery standards today!
 
-📊 PRACTICAL DEMONSTRATION & EXECUTIVE REPORTING
-==============================================
+
+📊**PRACTICAL DEMO & EXECUTIVE REPORTING**
+
 1. MODULE PREVIEW: DOMAIN AUDIT (CLI & REPORT ALIGNMENT) 
 Run the Tool (NetCast)
 
@@ -95,8 +111,11 @@ Run the Tool (NetCast)
 ![System Interface](images/image5.png)
 
 2. MODULE PREVIEW: EMAIL_TEXT AUDIT
+   
 → Paste email texts
+
 → Type done on the next line
+
 → Hit Enter
 
 ![System Interface](images/image6.png)
@@ -117,10 +136,6 @@ To generate your weekly/monthly/yearly reports:
 ![System Interface](images/image9.png)
 
 ![System Interface](images/image10.png)
-
-Note: Linux/Mac Users: python3 dashboard_generator
-Windows Users: python dashboard_generator
-
 
 
 MIT LICENSE + LEGAL DISCLAIMER & TERMS OF USE
