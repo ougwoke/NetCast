@@ -132,9 +132,14 @@ To generate your weekly/monthly/yearly reports:
 ![System Interface](images/image10.png)
 
 
-Note:   Linux/Mac Users: python3 dashboard_generator
+Note:    Linux/macOS Users: ./netcast
+         Windows Users: .\netcast.exe
+         
+         Linux/macOS Users: ./dashboard_generator
+                             .\dashboard_generator.exe
 
-        Windows Users: python dashboard_generator.py
+
+
 
 
         
