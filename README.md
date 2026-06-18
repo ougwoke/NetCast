@@ -132,12 +132,13 @@ To generate your weekly/monthly/yearly reports:
 ![System Interface](images/image10.png)
 
 
-Note:    Linux/macOS Users: ./netcast
-         Windows Users: .\netcast.exe
-         
-         Linux/macOS Users: ./dashboard_generator
-                             .\dashboard_generator.exe
+Note:   
 
+      Linux/macOS Users: ./netcast
+      Windows Users:     .\netcast.exe
+         
+      Linux/macOS Users: ./dashboard_generator
+      Windows Users:     .\dashboard_generator.exe
 
 
 
