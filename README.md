@@ -1,4 +1,4 @@
-NETCAST (OSS FREE VERSION)
+**NETCAST (OSS FREE VERSION)**
 
 NetCast is a lightweight, high-performance command-line interface (CLI) mail forensics and domain threat auditing utility designed for security analysts and network administrators. It automates local infrastructure diagnostics, validates essential email authentication postures, and conducts passive WHOIS footprinting entirely from the terminal.
 
@@ -40,8 +40,9 @@ Install the required foundational Python packages utilizing pip:
 💻 **Operational Usage**
 
 Execute the primary forensic file directly from your terminal session:
-       python3 netcast_core (Linux & macOS)
-       python netcast_core.py (Windows - Note save with .py before executing)
+
+       * python3 netcast_core (Linux & macOS)
+       * python netcast_core.py (Windows - Note save with .py before executing)
 
        
 3. **Sample Terminal Execution Output**
@@ -87,6 +88,7 @@ Stop copy-pasting terminal readouts into Notepad. Deploy NetCast Premium, genera
 
 
 1. MODULE PREVIEW: DOMAIN AUDIT (CLI & REPORT ALIGNMENT) 
+
 Run the Tool (NetCast)
 
 ![System Interface](images/image2.png)
@@ -118,13 +120,16 @@ Run the Tool (NetCast)
    
 To generate your weekly/monthly/yearly reports:
 
-   Run: * python3 dashboard_generator on your Terminal (where your packs are sitting) and you see all your reports drop in your directory.
-        * python dashboard_generator.py (Windows)
+   Run: 
+   
+       * python3 dashboard_generator (LInux & macOS) in your file directory and you see all your reports there.
+       * python dashboard_generator.py (Windows)
  
    
 ![System Interface](images/image9.png)
 
 ![System Interface](images/image10.png)
+
 
 Note:   Linux/Mac Users: python3 dashboard_generator
 
