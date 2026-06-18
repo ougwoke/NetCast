@@ -51,17 +51,18 @@ Execute the primary forensic file directly from your terminal session:
 
 
 
-**==================== **PREMIUM VERSION** ===================**
 
+
+
+🌟 ** PREMIUM VERSION: **
+=========================
+
+
+**=== WHAT MAKES PREMIUM ELITE ====**
 
 Subscribe to your NetCast - Basic Edition | NetCast - Professional Edition | NetCast - Enterprise Core
 
-at:  https://ugwoke2.gumroad.com/
-
-
-
-🌟 WHAT MAKES PREMIUM ELITE:
-===============================
+@:  https://ugwoke2.gumroad.com/
 
 
 1. GLOBAL THREAT INTELLIGENCE INTEGRATION: Features a dynamic, isolated API module mapping directly against global reputation aggregates (VirusTotal) for zero-day URL and malicious   infrastructure cross-referencing.
@@ -100,9 +101,9 @@ Run the Tool (NetCast)
 
 2. MODULE PREVIEW: EMAIL_TEXT AUDIT
    
-→ Paste email texts
-→ Type done on the next line
-→ Hit Enter
+  * Paste email texts
+  * Type done on the next line
+  * Hit Enter
 
 ![System Interface](images/image5.png)
 
@@ -134,6 +135,7 @@ To generate your weekly/monthly/yearly reports:
 Note:   Linux/Mac Users: python3 dashboard_generator
 
         Windows Users: python dashboard_generator.py
+
 
         
 
