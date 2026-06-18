@@ -74,7 +74,7 @@ Subscribe to your NetCast - Basic Edition | NetCast - Professional Edition | Net
 
 📦 **WHAT IS INCLUDED IN YOUR COMMERCIAL PACK:**
 
-    * netcast_Core (Fully Compiled, Self-Contained High-Performance Executable)
+    * netcast - 3 tiers (Fully Compiled, Self-Contained High-Performance Executable)
     * dashboard_generator (Plain-Text Adaptable HTML Reporting Engine Script)
     * .env (Global Context Token Environment Template)
     * SETUP_GUIDE.txt (Granular, Step-by-Step Security Deployment Manual)
