@@ -35,6 +35,22 @@ Install the required foundational Python packages utilizing pip:
 
        * pip install -r requirements.txt (On Linux & Windows)
        * pip3 install -r requirements.txt (On macOS)  
+
+Note: for Kali Linux / Ubuntu Users: If you encounter an externally-managed-environment error, you can safely bypass it by forcing the installation to your user profile:
+   
+       * pip install -r requirements.txt --break-system-packages
+
+Alternatively create a virtual environmentand run:
+
+       * python3 -m venv venv && source venv/bin/activate
+       * pip install -r requirements.txt
+       * python3 netcast_core
+       
+If you are passing an email file path (exp. Downloads), use:
+
+       * python3 netcast_core  ~/Downloads/suspicious_email.eml (On linux & macOS)
+       * python netcast_core   C:\Users\Username\Downloads\suspecious_email.eml (On Windows)
+    
        
 
 💻 **Operational Usage**
